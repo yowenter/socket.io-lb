@@ -1,0 +1,9 @@
+version: "2"
+services:
+  loadbalance:
+    image: nginx:1.9
+    volumes:
+    - /root/nginx.conf:/etc/nginx/conf.d/nginx.conf:ro
+    - /root/nginx-base.conf:/etc/nginx/nginx.conf:ro
+    ports:
+    - 9000:80
