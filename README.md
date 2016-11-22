@@ -1,10 +1,6 @@
-# socket.io loadbalance example
+# socket.io load balance example
 
-This is the source code for a very simple chat example used for 
-the [Getting Started](http://socket.io/get-started/chat/) guide 
-of the Socket.IO website.
-
-Please refer to it to learn how to run this application.
+The code  was copied from [Socket.io Chat Example](https://github.com/rauchg/chat-example)
 
 
 
@@ -12,23 +8,22 @@ Please refer to it to learn how to run this application.
 # Socket.IO 使用 Nginx 作负载均衡
 
 
-众所周知， `Nginx ` 是高性能的开源 http 服务器，反向代理服务器。  
-我们可以使用它来为 socket.io 应用 作负载均衡。  
+`Nginx` 是高性能 的 http 反向代理服务器。  
+使用 `Nginx` 作负载均衡最好不过。  
 
 
-## Get it ready :
+## Get it ready
 
-首先安装 nginx 。
-Mac 下可以使用 `brew` 。不过用brew 的 `nginx` 安装第三方模块，比如 `real_ip` 的module 比较麻烦，此处略去不提。   
-建议使用 `Docker `容器，方便快捷。   
+安装 `nginx` 
+Mac 下可以使用 `brew` 。    
+不过用brew 的 `nginx` 安装第三方模块，比如 `real_ip` 的module 比较麻烦，此处略去不提。建议使用 `Docker `容器，方便快捷。   
 
 
-## Let's begin :
+## How to do it  
 
-我们需要 使用 `nginx` 的 `stickey session` 的功能， 我们负载均衡 选择 `ip_hash` 。 
+利 用 `nginx` 的 `ip_hash` 来确保 socket 握手成功 。 
 
 以下是 配置文件：
-
 
 ```
 
@@ -49,7 +44,6 @@ server {
         proxy_pass http://io_nodes;
     }
 }
-
 
 
 upstream io_nodes {
@@ -75,17 +69,18 @@ services:
     ports:
     - 9000:80
 
-```
+```   
 
+在 nginx 目录下已经有 `nginx.yml` , 可以 `docker-compose -f nginx.yml up -d ` 一键部署。 
 
 # 多节点的 消息同步 
 
-我们 已经能够同时运行多个节点， 我们当然也希望 多个节点之间能够通信。 
-我们可以更改 Socket.io 的默认转接器(Adapter) 。  
-对于分布式的系统，我们可以使用 `Redis` 来做数据层 。  
+我们已经能够同时运行多个节点，当然也希望 多个节点之间能够通信。 
+通过更改 Socket.io 的默认内存转接器(Memory based Adapter) 。  
+在此，我们可以使用 `socket.io-redis`, 将数据存储在 `Redis`里 。   
 
+请确保已经安装依赖：
 
-我们首先要安装，
 `npm install socket.io-redis`   
 
 以下是示例：
@@ -107,8 +102,8 @@ io.adapter(redis(redisConfig));
 ```
 
 
-
 经过以上步骤，我们就得到了一个高性能的 socket.io 聊天室应用了 。
+你可以运行 该 repo 的 代码尝试一下。 
 
 
 
